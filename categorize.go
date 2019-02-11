@@ -19,9 +19,7 @@ func CategorizedStructs(objectMap map[string][]interface{}, filters ...func(refl
 			dataTypes = append(dataTypes, dt)
 		}
 
-		sort.Slice(dataTypes, func(i, j int) bool {
-			return (dataTypes[i].PkgPath + "." + dataTypes[i].Name) < (dataTypes[j].PkgPath + "." + dataTypes[j].Name)
-		})
+		sort.Slice(dataTypes, DataTypeSorter(dataTypes))
 
 		res[key] = dataTypes
 	}
