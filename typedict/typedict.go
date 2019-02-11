@@ -16,6 +16,14 @@ func NewFromTypes(types []reflect.Type) TypeDict {
 	return m
 }
 
+func New(objects []interface{}) TypeDict {
+	types := []reflect.Type{}
+	for _, obj := range objects {
+		types = append(types, reflect.TypeOf(obj))
+	}
+	return NewFromTypes(types)
+}
+
 func (m TypeDict) Dig() TypeDict {
 	for _, t := range m {
 		m.DigType(t)

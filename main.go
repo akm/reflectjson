@@ -14,12 +14,7 @@ func Process(objectMap map[string][]interface{}, ptn *regexp.Regexp) {
 	res := map[string][]*DataType{}
 
 	for key, objects := range objectMap {
-		types := []reflect.Type{}
-		for _, obj := range objects {
-			types = append(types, reflect.TypeOf(obj))
-		}
-
-		types = typedict.NewFromTypes(types).Dig().Types(func(t reflect.Type) bool {
+		types := typedict.New(objects).Dig().Types(func(t reflect.Type) bool {
 			return ptn.MatchString(t.PkgPath())
 		})
 
