@@ -8,7 +8,7 @@ import (
 	"regexp"
 )
 
-func process(objectMap map[string][]interface{}, ptn *regexp.Regexp) {
+func Process(objectMap map[string][]interface{}, ptn *regexp.Regexp) {
 	res := map[string][]*DataType{}
 
 	for key, objects := range objectMap {
@@ -17,11 +17,11 @@ func process(objectMap map[string][]interface{}, ptn *regexp.Regexp) {
 			types = append(types, reflect.TypeOf(obj))
 		}
 
-		types = digTypes(types)
+		types = DigTypes(types)
 
 		dataTypes := []*DataType{}
 		for _, t := range types {
-			dt := newDataType(t)
+			dt := NewDataType(t)
 			if ptn.MatchString(dt.PkgPath) {
 				dataTypes = append(dataTypes, dt)
 			}
@@ -64,7 +64,7 @@ type DataType struct {
 	Fields  []*DataField
 }
 
-func digTypes(types []reflect.Type) []reflect.Type {
+func DigTypes(types []reflect.Type) []reflect.Type {
 	m := map[string]reflect.Type{}
 	for _, t := range types {
 		key := t.PkgPath() + "." + t.Name()
@@ -72,7 +72,7 @@ func digTypes(types []reflect.Type) []reflect.Type {
 	}
 
 	for _, t := range types {
-		digType(m, t)
+		DigType(m, t)
 	}
 
 	r := []reflect.Type{}
@@ -82,16 +82,16 @@ func digTypes(types []reflect.Type) []reflect.Type {
 	return r
 }
 
-func digType(m map[string]reflect.Type, t reflect.Type) {
+func DigType(m map[string]reflect.Type, t reflect.Type) {
 	switch t.Kind() {
 	case reflect.Struct:
-		digStruct(m, t)
+		DigStruct(m, t)
 	case reflect.Array, reflect.Chan, reflect.Map, reflect.Ptr, reflect.Slice:
-		digType(m, t.Elem())
+		DigType(m, t.Elem())
 	}
 }
 
-func digStruct(m map[string]reflect.Type, t reflect.Type) {
+func DigStruct(m map[string]reflect.Type, t reflect.Type) {
 	numField := t.NumField()
 	for i := 0; i < numField; i++ {
 		f := t.Field(i)
@@ -103,14 +103,14 @@ func digStruct(m map[string]reflect.Type, t reflect.Type) {
 				m[key] = ft
 				switch ft.Kind() {
 				case reflect.Struct:
-					digType(m, ft)
+					DigType(m, ft)
 				}
 			}
 		}
 	}
 }
 
-func newDataType(t reflect.Type) *DataType {
+func NewDataType(t reflect.Type) *DataType {
 	r := &DataType{
 		Name:    t.Name(),
 		PkgPath: t.PkgPath(),
