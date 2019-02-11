@@ -6,6 +6,8 @@ import (
 	"os"
 	"reflect"
 	"regexp"
+
+	"github.com/akm/reflectjson/typedict"
 )
 
 func Process(objectMap map[string][]interface{}, ptn *regexp.Regexp) {
@@ -17,7 +19,7 @@ func Process(objectMap map[string][]interface{}, ptn *regexp.Regexp) {
 			types = append(types, reflect.TypeOf(obj))
 		}
 
-		types = NewTypeDict(types).Dig().Types(func(t reflect.Type) bool {
+		types = typedict.NewTypeDict(types).Dig().Types(func(t reflect.Type) bool {
 			return ptn.MatchString(t.PkgPath())
 		})
 

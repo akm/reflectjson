@@ -1,4 +1,4 @@
-package reflectjson
+package typedict
 
 import (
 	"reflect"
