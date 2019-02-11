@@ -6,7 +6,7 @@ import (
 
 type TypeDict map[string]reflect.Type
 
-func NewTypeDict(types []reflect.Type) TypeDict {
+func NewFromTypes(types []reflect.Type) TypeDict {
 	m := TypeDict{}
 	for _, t := range types {
 		key := t.PkgPath() + "." + t.Name()

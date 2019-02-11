@@ -19,7 +19,7 @@ func Process(objectMap map[string][]interface{}, ptn *regexp.Regexp) {
 			types = append(types, reflect.TypeOf(obj))
 		}
 
-		types = typedict.NewTypeDict(types).Dig().Types(func(t reflect.Type) bool {
+		types = typedict.NewFromTypes(types).Dig().Types(func(t reflect.Type) bool {
 			return ptn.MatchString(t.PkgPath())
 		})
 
