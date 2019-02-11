@@ -23,12 +23,23 @@ func (m TypeDict) Dig() TypeDict {
 	return m
 }
 
-func (m TypeDict) Types() []reflect.Type {
+func (m TypeDict) Types(filters ...func(reflect.Type) bool) []reflect.Type {
 	r := []reflect.Type{}
 	for _, t := range m {
-		r = append(r, t)
+		if m.MatchWithFilter(t, filters...) {
+			r = append(r, t)
+		}
 	}
 	return r
+}
+
+func (m TypeDict) MatchWithFilter(t reflect.Type, filters ...func(reflect.Type) bool) bool {
+	for _, f := range filters {
+		if !f(t) {
+			return false
+		}
+	}
+	return true
 }
 
 func (m TypeDict) DigType(t reflect.Type) {

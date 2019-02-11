@@ -17,14 +17,14 @@ func Process(objectMap map[string][]interface{}, ptn *regexp.Regexp) {
 			types = append(types, reflect.TypeOf(obj))
 		}
 
-		types = NewTypeDict(types).Dig().Types()
+		types = NewTypeDict(types).Dig().Types(func(t reflect.Type) bool {
+			return ptn.MatchString(t.PkgPath())
+		})
 
 		dataTypes := []*DataType{}
 		for _, t := range types {
 			dt := NewDataType(t)
-			if ptn.MatchString(dt.PkgPath) {
-				dataTypes = append(dataTypes, dt)
-			}
+			dataTypes = append(dataTypes, dt)
 		}
 
 		res[key] = dataTypes
