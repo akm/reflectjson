@@ -1,8 +1,6 @@
 package reflectjson
 
 import (
-	"encoding/json"
-	"fmt"
 	"os"
 	"reflect"
 	"regexp"
@@ -27,14 +25,5 @@ func Process(objectMap map[string][]interface{}, ptn *regexp.Regexp) {
 		res[key] = dataTypes
 	}
 
-	b, err := json.MarshalIndent(res, "", "  ")
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to json.MarshalIndent because of %v\n", err)
-		return
-	}
-	_, err = os.Stdout.Write(b)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to write because of %v\n", err)
-		return
-	}
+	Output(os.Stdout, res)
 }
