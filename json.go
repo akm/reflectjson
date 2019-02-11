@@ -5,7 +5,7 @@ import (
 	"io"
 )
 
-func Output(dest io.Writer, obj interface{}) error {
+func WriteJson(dest io.Writer, obj interface{}) error {
 	b, err := json.MarshalIndent(obj, "", "  ")
 	if err != nil {
 		return err

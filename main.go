@@ -7,7 +7,7 @@ import (
 )
 
 func Process(objectMap map[string][]interface{}, ptn *regexp.Regexp) {
-	Output(os.Stdout, SeriazlizableWithCategories(objectMap, func(t reflect.Type) bool {
+	WriteJson(os.Stdout, SeriazlizableWithCategories(objectMap, func(t reflect.Type) bool {
 		return ptn.MatchString(t.PkgPath())
 	}))
 }
