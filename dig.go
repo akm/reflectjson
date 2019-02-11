@@ -13,10 +13,13 @@ func NewTypeDict(types []reflect.Type) TypeDict {
 		m[key] = t
 	}
 
-	for _, t := range types {
+	return m.Dig()
+}
+
+func (m TypeDict) Dig() TypeDict {
+	for _, t := range m {
 		m.DigType(t)
 	}
-
 	return m
 }
 
