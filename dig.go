@@ -4,16 +4,24 @@ import (
 	"reflect"
 )
 
-func DigTypes(types []reflect.Type) []reflect.Type {
-	m := map[string]reflect.Type{}
+type TypeDict map[string]reflect.Type
+
+func NewTypeDict(types []reflect.Type) TypeDict {
+	m := TypeDict{}
 	for _, t := range types {
 		key := t.PkgPath() + "." + t.Name()
 		m[key] = t
 	}
 
 	for _, t := range types {
-		DigType(m, t)
+		m.DigType(t)
 	}
+
+	return m
+}
+
+func DigTypes(types []reflect.Type) []reflect.Type {
+	m := NewTypeDict(types)
 
 	r := []reflect.Type{}
 	for _, t := range m {
@@ -22,16 +30,16 @@ func DigTypes(types []reflect.Type) []reflect.Type {
 	return r
 }
 
-func DigType(m map[string]reflect.Type, t reflect.Type) {
+func (m TypeDict) DigType(t reflect.Type) {
 	switch t.Kind() {
 	case reflect.Struct:
-		DigStruct(m, t)
+		m.DigStruct(t)
 	case reflect.Array, reflect.Chan, reflect.Map, reflect.Ptr, reflect.Slice:
-		DigType(m, t.Elem())
+		m.DigType(t.Elem())
 	}
 }
 
-func DigStruct(m map[string]reflect.Type, t reflect.Type) {
+func (m TypeDict) DigStruct(t reflect.Type) {
 	numField := t.NumField()
 	for i := 0; i < numField; i++ {
 		f := t.Field(i)
@@ -43,7 +51,7 @@ func DigStruct(m map[string]reflect.Type, t reflect.Type) {
 				m[key] = ft
 				switch ft.Kind() {
 				case reflect.Struct:
-					DigType(m, ft)
+					m.DigType(ft)
 				}
 			}
 		}
