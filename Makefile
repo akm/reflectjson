@@ -1,10 +1,9 @@
-BASE_PKG=github.com/akm/reflectjson
+BASE_PKG=github.com/akm/typedict
 VERSION ?= $(shell cat ./VERSION)
 
 .PHONY: test
 test:
-	go test . && \
-	go test $(BASE_PKG)/typedict
+	go test .
 
 .PHONY: build
 build:

@@ -1,9 +1,20 @@
-package reflectjson
+package typedict
 
 import (
 	"reflect"
 	"regexp"
+	"sort"
 )
+
+func SerializableTypes(types []reflect.Type) []*DataType {
+	dataTypes := []*DataType{}
+	for _, t := range types {
+		dt := NewDataType(t)
+		dataTypes = append(dataTypes, dt)
+	}
+	sort.Slice(dataTypes, DataTypeSorter(dataTypes))
+	return dataTypes
+}
 
 type DataFieldType struct {
 	PkgPath        string   `json:"PkgPath,omitempty"`

@@ -1,4 +1,4 @@
-package reflectjson
+package typedict
 
 func DataTypeSorter(dataTypes []*DataType) func(int, int) bool {
 	return func(i, j int) bool {
