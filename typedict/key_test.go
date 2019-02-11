@@ -9,18 +9,21 @@ import (
 
 func TestKeyOf(t *testing.T) {
 	patterns := map[string]interface{}{
-		"string":               "",
-		"string/ptr":           (*string)(nil),
-		"string/ptr/slice":     []*string{},
-		"string/slice":         []string{},
-		"string/slice/slice":   [][]string{},
+		"string":                "",
+		"string:ptr":            (*string)(nil),
+		"string:ptr:slice":      []*string{},
+		"string:slice":          []string{},
+		"string:slice:slice":    [][]string{},
+		"map[string]string":     map[string]string{},
+		"map[string]string:ptr": map[string]*string{},
+		"map[string:ptr]string": map[*string]string{},
 		"int":                  0,
-		"int/ptr":              (*int)(nil),
-		"int/ptr/slice":        []*int{},
-		"int/slice":            []int{},
-		"int/slice/slice":      [][]int{},
+		"int:ptr":              (*int)(nil),
+		"int:ptr:slice":        []*int{},
+		"int:slice":            []int{},
+		"int:slice:slice":      [][]int{},
 		"net/http.Request":     http.Request{},
-		"net/http.Request/ptr": (*http.Request)(nil),
+		"net/http.Request:ptr": (*http.Request)(nil),
 	}
 
 	for expected, obj := range patterns {
