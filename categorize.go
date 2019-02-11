@@ -7,7 +7,7 @@ import (
 	"github.com/akm/reflectjson/typedict"
 )
 
-func SeriazlizableWithCategories(objectMap map[string][]interface{}, filters ...func(reflect.Type) bool) map[string][]*DataType {
+func CategorizedStructs(objectMap map[string][]interface{}, filters ...func(reflect.Type) bool) map[string][]*DataType {
 	res := map[string][]*DataType{}
 
 	for key, objects := range objectMap {

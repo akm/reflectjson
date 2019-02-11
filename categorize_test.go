@@ -9,7 +9,7 @@ import (
 )
 
 func TestSerializeableWithCategories(t *testing.T) {
-	categorizedTypes := SeriazlizableWithCategories(map[string][]interface{}{
+	categorizedTypes := CategorizedStructs(map[string][]interface{}{
 		"http": []interface{}{
 			(*http.Request)(nil),
 		},
