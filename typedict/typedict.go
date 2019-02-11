@@ -43,10 +43,12 @@ func (m TypeDict) Types(filters ...func(reflect.Type) bool) []reflect.Type {
 }
 
 func (m TypeDict) Structs(filters ...func(reflect.Type) bool) []reflect.Type {
-	filters = append(filters, func(t reflect.Type) bool {
-		return t.Kind() == reflect.Struct
-	})
-	return m.Types(filters...)
+	newFilters := append(Filters{
+		func(t reflect.Type) bool {
+			return t.Kind() == reflect.Struct
+		},
+	}, filters...)
+	return m.Types(newFilters...)
 }
 
 func (m TypeDict) DigType(t reflect.Type) {
