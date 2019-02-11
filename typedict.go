@@ -1,7 +1,7 @@
 package typedict
 
 import (
-	"fmt"
+	// "fmt"
 	"reflect"
 )
 
@@ -53,7 +53,7 @@ func (m TypeDict) Structs(filters ...func(reflect.Type) bool) []reflect.Type {
 
 func (m TypeDict) DigType(t reflect.Type) {
 	key := KeyOf(t)
-	fmt.Printf("DigType %s\n", key)
+	// fmt.Printf("DigType %s\n", key)
 	_, ok := m[key]
 	if ok {
 		return
