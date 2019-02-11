@@ -24,10 +24,6 @@ func New(objects []interface{}) TypeDict {
 	return NewFromTypes(types)
 }
 
-func (m TypeDict) Dig() TypeDict {
-	return m
-}
-
 func (m TypeDict) Keys() []string {
 	r := []string{}
 	for k, _ := range m {

@@ -11,7 +11,7 @@ import (
 func TestTypeDict(t *testing.T) {
 	dict := New([]interface{}{
 		http.Request{},
-	}).Dig()
+	})
 
 	{
 		actualKeys := dict.Keys()

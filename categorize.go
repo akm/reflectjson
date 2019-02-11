@@ -10,7 +10,7 @@ func SeriazlizableWithCategories(objectMap map[string][]interface{}, filters ...
 	res := map[string][]*DataType{}
 
 	for key, objects := range objectMap {
-		types := typedict.New(objects).Dig().Types(filters...)
+		types := typedict.New(objects).Types(filters...)
 
 		dataTypes := []*DataType{}
 		for _, t := range types {
