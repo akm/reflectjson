@@ -1,6 +1,7 @@
 package typedict
 
 import (
+	// "fmt"
 	"reflect"
 )
 
@@ -9,8 +10,7 @@ type TypeDict map[string]reflect.Type
 func NewFromTypes(types []reflect.Type) TypeDict {
 	m := TypeDict{}
 	for _, t := range types {
-		key := t.PkgPath() + "." + t.Name()
-		m[key] = t
+		m[KeyOf(t)] = t
 	}
 
 	return m
@@ -41,6 +41,11 @@ func (m TypeDict) Types(filters ...func(reflect.Type) bool) []reflect.Type {
 	return r
 }
 
+func (m TypeDict) Include(t reflect.Type) bool {
+	_, ok := m[KeyOf(t)]
+	return ok
+}
+
 func (m TypeDict) DigType(t reflect.Type) {
 	switch t.Kind() {
 	case reflect.Struct:
@@ -56,7 +61,7 @@ func (m TypeDict) DigStruct(t reflect.Type) {
 		f := t.Field(i)
 		ft := f.Type
 		if ft.PkgPath() != "" {
-			key := ft.PkgPath() + "." + ft.Name()
+			key := KeyOf(ft)
 			_, ok := m[key]
 			if !ok {
 				m[key] = ft
