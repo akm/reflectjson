@@ -13,7 +13,7 @@ func NewTypeDict(types []reflect.Type) TypeDict {
 		m[key] = t
 	}
 
-	return m.Dig()
+	return m
 }
 
 func (m TypeDict) Dig() TypeDict {
@@ -29,11 +29,6 @@ func (m TypeDict) Types() []reflect.Type {
 		r = append(r, t)
 	}
 	return r
-}
-
-func DigTypes(types []reflect.Type) []reflect.Type {
-	m := NewTypeDict(types)
-	return m.Types()
 }
 
 func (m TypeDict) DigType(t reflect.Type) {

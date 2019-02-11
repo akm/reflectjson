@@ -17,7 +17,7 @@ func Process(objectMap map[string][]interface{}, ptn *regexp.Regexp) {
 			types = append(types, reflect.TypeOf(obj))
 		}
 
-		types = DigTypes(types)
+		types = NewTypeDict(types).Dig().Types()
 
 		dataTypes := []*DataType{}
 		for _, t := range types {
