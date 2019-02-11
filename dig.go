@@ -23,14 +23,17 @@ func (m TypeDict) Dig() TypeDict {
 	return m
 }
 
-func DigTypes(types []reflect.Type) []reflect.Type {
-	m := NewTypeDict(types)
-
+func (m TypeDict) Types() []reflect.Type {
 	r := []reflect.Type{}
 	for _, t := range m {
 		r = append(r, t)
 	}
 	return r
+}
+
+func DigTypes(types []reflect.Type) []reflect.Type {
+	m := NewTypeDict(types)
+	return m.Types()
 }
 
 func (m TypeDict) DigType(t reflect.Type) {
