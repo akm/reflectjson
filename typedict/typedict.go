@@ -1,7 +1,7 @@
 package typedict
 
 import (
-	// "fmt"
+	"fmt"
 	"reflect"
 )
 
@@ -10,7 +10,7 @@ type TypeDict map[string]reflect.Type
 func NewFromTypes(types []reflect.Type) TypeDict {
 	m := TypeDict{}
 	for _, t := range types {
-		m[KeyOf(t)] = t
+		m.DigType(t)
 	}
 
 	return m
@@ -25,10 +25,15 @@ func New(objects []interface{}) TypeDict {
 }
 
 func (m TypeDict) Dig() TypeDict {
-	for _, t := range m {
-		m.DigType(t)
-	}
 	return m
+}
+
+func (m TypeDict) Keys() []string {
+	r := []string{}
+	for k, _ := range m {
+		r = append(r, k)
+	}
+	return r
 }
 
 func (m TypeDict) Types(filters ...func(reflect.Type) bool) []reflect.Type {
@@ -41,12 +46,21 @@ func (m TypeDict) Types(filters ...func(reflect.Type) bool) []reflect.Type {
 	return r
 }
 
-func (m TypeDict) Include(t reflect.Type) bool {
-	_, ok := m[KeyOf(t)]
-	return ok
+func (m TypeDict) Structs(filters ...func(reflect.Type) bool) []reflect.Type {
+	filters = append(filters, func(t reflect.Type) bool {
+		return t.Kind() == reflect.Struct
+	})
+	return m.Types(filters...)
 }
 
 func (m TypeDict) DigType(t reflect.Type) {
+	key := KeyOf(t)
+	fmt.Printf("DigType %s\n", key)
+	_, ok := m[key]
+	if ok {
+		return
+	}
+	m[key] = t
 	switch t.Kind() {
 	case reflect.Struct:
 		m.DigStruct(t)
@@ -60,16 +74,7 @@ func (m TypeDict) DigStruct(t reflect.Type) {
 	for i := 0; i < numField; i++ {
 		f := t.Field(i)
 		ft := f.Type
-		if ft.PkgPath() != "" {
-			key := KeyOf(ft)
-			_, ok := m[key]
-			if !ok {
-				m[key] = ft
-				switch ft.Kind() {
-				case reflect.Struct:
-					m.DigType(ft)
-				}
-			}
-		}
+		// fmt.Printf("DigStruct %s.%s [%v]\n", t.PkgPath()+"."+t.Name(), f.Name, ft.String())
+		m.DigType(ft)
 	}
 }
