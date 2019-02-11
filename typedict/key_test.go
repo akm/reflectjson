@@ -2,6 +2,7 @@ package typedict
 
 import (
 	"net/http"
+	"net/url"
 	"reflect"
 
 	"testing"
@@ -17,13 +18,15 @@ func TestKeyOf(t *testing.T) {
 		"map[string]string":     map[string]string{},
 		"map[string]string:ptr": map[string]*string{},
 		"map[string:ptr]string": map[*string]string{},
-		"int":                  0,
-		"int:ptr":              (*int)(nil),
-		"int:ptr:slice":        []*int{},
-		"int:slice":            []int{},
-		"int:slice:slice":      [][]int{},
-		"net/http.Request":     http.Request{},
-		"net/http.Request:ptr": (*http.Request)(nil),
+		"int":                     0,
+		"int:ptr":                 (*int)(nil),
+		"int:ptr:slice":           []*int{},
+		"int:slice":               []int{},
+		"int:slice:slice":         [][]int{},
+		"net/http.Request":        http.Request{},
+		"net/http.Request:ptr":    (*http.Request)(nil),
+		"net/url.Values":          (url.Values)(nil),
+		"map[string]string:slice": (map[string][]string)(nil),
 	}
 
 	for expected, obj := range patterns {
