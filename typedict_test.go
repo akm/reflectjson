@@ -3,6 +3,7 @@ package typedict
 import (
 	// "fmt"
 	"net/http"
+	"reflect"
 	"sort"
 
 	"testing"
@@ -58,4 +59,56 @@ func TestTypeDict(t *testing.T) {
 		}
 	}
 
+}
+
+type TestEnumB int
+
+const (
+	TestEnumB1 TestEnumB = 1
+	TestEnumB2 TestEnumB = 2
+)
+
+type TestStruct1 struct {
+	Name   string
+	Status TestEnumB
+}
+
+func TestTypeDictWithCustomStruct(t *testing.T) {
+	dict := New([]interface{}{
+		(*TestStruct1)(nil),
+	})
+
+	compareStrings := func(name string, actuals, expecteds []string) {
+		if len(expecteds) != len(actuals) {
+			t.Errorf("%s's length expects %d but was %d\nexpected: %v\nactual: %v\n", name, len(expecteds), len(actuals), expecteds, actuals)
+			return
+		}
+		for i, expected := range expecteds {
+			if expected != actuals[i] {
+				t.Errorf("%s [%d] expects %s but was %s\nexpected: %v\nactual: %v\n", name, i, expected, actuals[i], expecteds, actuals)
+			}
+		}
+	}
+
+	{
+		actualKeys := dict.Keys()
+		sort.Strings(actualKeys)
+
+		compareStrings("keys", actualKeys, []string{
+			"github.com/akm/typedict.TestEnumB",
+			"github.com/akm/typedict.TestStruct1",
+			"github.com/akm/typedict.TestStruct1:ptr",
+			"string",
+		})
+
+		types := dict.Types(KindFilter(append([]reflect.Kind{reflect.Struct}, SimpleKinds...)...))
+		typeNames := []string{}
+		for _, t := range types {
+			typeNames = append(typeNames, t.PkgPath()+"."+t.Name())
+		}
+		compareStrings("keys", typeNames, []string{
+			"github.com/akm/typedict.TestEnumB",
+			"github.com/akm/typedict.TestStruct1",
+		})
+	}
 }
