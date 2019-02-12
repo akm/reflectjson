@@ -3,6 +3,7 @@ package typedict
 import (
 	// "fmt"
 	"reflect"
+	"sort"
 )
 
 type TypeDict map[string]reflect.Type
@@ -39,6 +40,7 @@ func (m TypeDict) Types(filters ...func(reflect.Type) bool) []reflect.Type {
 			r = append(r, t)
 		}
 	}
+	sort.Slice(r, ReflectTypeSorter(r))
 	return r
 }
 
