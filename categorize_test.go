@@ -4,19 +4,20 @@ import (
 	// "fmt"
 	"image/gif"
 	"net/http"
+	"reflect"
 
 	"testing"
 )
 
 func TestSerializeableWithCategories(t *testing.T) {
-	categorizedTypes := CategorizedStructs(map[string][]interface{}{
+	categorizedTypes := CategorizedTypes(map[string][]interface{}{
 		"http": []interface{}{
 			(*http.Request)(nil),
 		},
 		"image": []interface{}{
 			(*gif.GIF)(nil),
 		},
-	})
+	}, KindFilter(reflect.Struct))
 
 	compareStrings := func(name string, expecteds []string) {
 		structs := categorizedTypes[name]

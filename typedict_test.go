@@ -32,7 +32,7 @@ func TestTypeDict(t *testing.T) {
 	}
 
 	{
-		structs := dict.Structs()
+		structs := dict.Types(KindFilter(reflect.Struct))
 		structNames := []string{}
 		for _, t := range structs {
 			structNames = append(structNames, KeyOf(t))

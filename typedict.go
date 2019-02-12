@@ -44,15 +44,6 @@ func (m TypeDict) Types(filters ...func(reflect.Type) bool) []reflect.Type {
 	return r
 }
 
-func (m TypeDict) Structs(filters ...func(reflect.Type) bool) []reflect.Type {
-	newFilters := append(Filters{
-		func(t reflect.Type) bool {
-			return t.Kind() == reflect.Struct
-		},
-	}, filters...)
-	return m.Types(newFilters...)
-}
-
 func (m TypeDict) DigType(t reflect.Type) {
 	key := KeyOf(t)
 	// fmt.Printf("DigType %s\n", key)
