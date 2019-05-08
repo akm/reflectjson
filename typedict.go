@@ -64,8 +64,8 @@ func (m TypeDict) DigStruct(t reflect.Type) {
 	numField := t.NumField()
 	for i := 0; i < numField; i++ {
 		f := t.Field(i)
-		ft := f.Type
 		// fmt.Printf("DigStruct %s.%s [%v]\n", t.PkgPath()+"."+t.Name(), f.Name, ft.String())
+		_, ft := KindNamesAndEnd(f.Type)
 		m.DigType(ft)
 	}
 }
