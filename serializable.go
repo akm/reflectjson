@@ -37,6 +37,7 @@ type DataType struct {
 	Kinds   []string
 	Size    uintptr
 	Fields  []*DataField
+	Representation string
 }
 
 func NewDataType(t reflect.Type) *DataType {
@@ -46,6 +47,7 @@ func NewDataType(t reflect.Type) *DataType {
 		PkgPath: end.PkgPath(),
 		Kinds:   kindNames,
 		Size:    t.Size(),
+		Representation: t.String(),
 	}
 	if t.Kind() != reflect.Struct {
 		return r
