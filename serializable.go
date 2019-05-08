@@ -34,14 +34,17 @@ type DataField struct {
 type DataType struct {
 	Name    string
 	PkgPath string
+	Kinds   []string
 	Size    uintptr
 	Fields  []*DataField
 }
 
 func NewDataType(t reflect.Type) *DataType {
+	kindNames, end := KindNamesAndEnd(t)
 	r := &DataType{
-		Name:    t.Name(),
-		PkgPath: t.PkgPath(),
+		Name:    end.Name(),
+		PkgPath: end.PkgPath(),
+		Kinds:   kindNames,
 		Size:    t.Size(),
 	}
 	if t.Kind() != reflect.Struct {
@@ -66,18 +69,22 @@ func NewDataType(t reflect.Type) *DataType {
 }
 
 func DataFieldTypeFromType(t reflect.Type) *DataFieldType {
+	kindNames, end := KindNamesAndEnd(t)
+	return &DataFieldType{
+		PkgPath:        end.PkgPath(),
+		Name:           end.Name(),
+		Kinds:          kindNames,
+		Representation: t.String(),
+	}
+}
+
+func KindNamesAndEnd(t reflect.Type) ([]string, reflect.Type) {
 	switch t.Kind() {
 	case reflect.Array, reflect.Chan, reflect.Map, reflect.Ptr, reflect.Slice:
-		r := DataFieldTypeFromType(t.Elem())
-		r.Kinds = append(r.Kinds, t.Kind().String())
-		return r
+		kindNames, end := KindNamesAndEnd(t.Elem())
+		return append(kindNames, t.Kind().String()), end
 	default:
-		return &DataFieldType{
-			PkgPath:        t.PkgPath(),
-			Name:           t.Name(),
-			Kinds:          []string{t.Kind().String()},
-			Representation: t.String(),
-		}
+		return []string{t.Kind().String()}, t
 	}
 }
 
