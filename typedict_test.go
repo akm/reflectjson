@@ -100,7 +100,6 @@ func TestTypeDictWithCustomStruct(t *testing.T) {
 		compareStrings(t, "keys", actualKeys, []string{
 			"github.com/akm/typedict.TestEnumB",
 			"github.com/akm/typedict.TestStruct1",
-			"github.com/akm/typedict.TestStruct1:ptr",
 			"string",
 		})
 
@@ -127,8 +126,9 @@ func TestTypeDictDIgType(t *testing.T) {
 
 	compareStrings(t, "keys", actualKeys, []string{
 		"github.com/akm/typedict/typedict_test/bar.B",
+		"github.com/akm/typedict/typedict_test/baz.C",
+		"github.com/akm/typedict/typedict_test/baz.D",
 		"github.com/akm/typedict/typedict_test/foo.A",
-		"github.com/akm/typedict/typedict_test/foo.A:ptr",
 		"string",
 	})
 }
