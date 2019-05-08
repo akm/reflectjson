@@ -51,7 +51,10 @@ func (m TypeDict) DigType(t reflect.Type) {
 	if ok {
 		return
 	}
-	m[key] = t
+	// fmt.Printf("DigStruct %s.%s \n", t.PkgPath(), t.Name())
+	if t.Name() != "" {
+		m[key] = t
+	}
 	switch t.Kind() {
 	case reflect.Struct:
 		m.DigStruct(t)
@@ -64,8 +67,7 @@ func (m TypeDict) DigStruct(t reflect.Type) {
 	numField := t.NumField()
 	for i := 0; i < numField; i++ {
 		f := t.Field(i)
-		// fmt.Printf("DigStruct %s.%s [%v]\n", t.PkgPath()+"."+t.Name(), f.Name, ft.String())
-		_, ft := KindNamesAndEnd(f.Type)
-		m.DigType(ft)
+		// _, ft := KindNamesAndEnd()
+		m.DigType(f.Type)
 	}
 }
