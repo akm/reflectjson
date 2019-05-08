@@ -22,8 +22,8 @@ func TestTypeDict(t *testing.T) {
 
 		expecteds := []string{
 			"net/url.URL",
-			"net/url.URL:ptr",
-			"net/url.Values",
+			// "net/url.URL:ptr",
+			// "net/url.Values",
 		}
 
 		for _, expected := range expecteds {
@@ -127,8 +127,6 @@ func TestTypeDictDIgType(t *testing.T) {
 
 	compareStrings(t, "keys", actualKeys, []string{
 		"github.com/akm/typedict/typedict_test/bar.B",
-		"github.com/akm/typedict/typedict_test/bar.B:ptr",
-		"github.com/akm/typedict/typedict_test/bar.B:ptr:slice",
 		"github.com/akm/typedict/typedict_test/foo.A",
 		"github.com/akm/typedict/typedict_test/foo.A:ptr",
 		"string",
