@@ -6,8 +6,8 @@ import (
 	"sort"
 )
 
-func SerializableTypes(types []reflect.Type) []*DataType {
-	dataTypes := []*DataType{}
+func SerializableTypes(types []reflect.Type) DataTypes {
+	dataTypes := DataTypes{}
 	for _, t := range types {
 		dt := NewDataType(t)
 		dataTypes = append(dataTypes, dt)
@@ -17,9 +17,9 @@ func SerializableTypes(types []reflect.Type) []*DataType {
 }
 
 type DataFieldType struct {
-	PkgPath        string   `json:"PkgPath,omitempty"`
-	Name           string   `json:"Name,omitempty"`
-	Kinds          []string `json:"Kinds,omitempty"`
+	PkgPath        string `json:"PkgPath,omitempty"`
+	Name           string `json:"Name,omitempty"`
+	Kind           string `json:"Kind,omitempty"`
 	Representation string
 }
 
@@ -32,22 +32,39 @@ type DataField struct {
 }
 
 type DataType struct {
-	Name    string
-	PkgPath string
-	Kinds   []string
-	Size    uintptr
-	Fields  []*DataField
+	Name           string
+	PkgPath        string
+	Kind           string
+	Size           uintptr
+	Fields         []*DataField
+	Elem           *DataType `json:"Elem,omitempty"`
 	Representation string
 }
 
+type DataTypes []*DataType
+
+func (s DataTypes) DetectByName(name string) *DataType {
+	for _, i := range s {
+		if i.Name == name {
+			return i
+		}
+	}
+	return nil
+}
+
 func NewDataType(t reflect.Type) *DataType {
-	kindNames, end := KindNamesAndEnd(t)
 	r := &DataType{
-		Name:    end.Name(),
-		PkgPath: end.PkgPath(),
-		Kinds:   kindNames,
-		Size:    t.Size(),
+		Name:           t.Name(),
+		PkgPath:        t.PkgPath(),
+		Kind:           t.Kind().String(),
+		Size:           t.Size(),
 		Representation: t.String(),
+	}
+	switch t.Kind() {
+	case reflect.Array, reflect.Chan, reflect.Map, reflect.Ptr, reflect.Slice:
+		if elem := t.Elem(); elem != nil {
+			r.Elem = NewDataType(elem)
+		}
 	}
 	if t.Kind() != reflect.Struct {
 		return r
@@ -71,23 +88,19 @@ func NewDataType(t reflect.Type) *DataType {
 }
 
 func DataFieldTypeFromType(t reflect.Type) *DataFieldType {
-	kindNames, end := KindNamesAndEnd(t)
-	return &DataFieldType{
-		PkgPath:        end.PkgPath(),
-		Name:           end.Name(),
-		Kinds:          kindNames,
+	r := &DataFieldType{
+		PkgPath:        t.PkgPath(),
+		Name:           t.Name(),
+		Kind:           t.Kind().String(),
 		Representation: t.String(),
 	}
-}
-
-func KindNamesAndEnd(t reflect.Type) ([]string, reflect.Type) {
-	switch t.Kind() {
-	case reflect.Array, reflect.Chan, reflect.Map, reflect.Ptr, reflect.Slice:
-		kindNames, end := KindNamesAndEnd(t.Elem())
-		return append(kindNames, t.Kind().String()), end
-	default:
-		return []string{t.Kind().String()}, t
-	}
+	// switch t.Kind() {
+	// case reflect.Array, reflect.Chan, reflect.Map, reflect.Ptr, reflect.Slice:
+	// 	if elem := t.Elem(); elem != nil {
+	// 		r.Elem = NewDataType(elem)
+	// 	}
+	// }
+	return r
 }
 
 var TagParserRE = regexp.MustCompile(`\s*([^:\s]+?):"(.+?)"`)
