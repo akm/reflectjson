@@ -48,7 +48,6 @@ func TestSerializeableWithCategories(t *testing.T) {
 			"math/big.Int",
 			"mime/multipart.FileHeader",
 			"mime/multipart.Form",
-			"net.IPNet",
 			"net/http.Request",
 			"net/http.Response",
 			"net/url.URL",
