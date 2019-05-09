@@ -17,17 +17,17 @@ func SerializableTypes(types []reflect.Type) DataTypes {
 }
 
 type DataFieldType struct {
-	PkgPath        string `json:"PkgPath,omitempty"`
-	Name           string `json:"Name,omitempty"`
-	Kind           string `json:"Kind,omitempty"`
-	Representation string
+	PkgPath        string `json:",omitempty"`
+	Name           string `json:",omitempty"`
+	Kind           string `json:",omitempty"`
+	Representation string `json:",omitempty"`
 }
 
 type DataField struct {
 	Name      string
 	Type      *DataFieldType
-	RawTag    string            `json:"RawTag,omitempty"`
-	Tag       map[string]string `json:"Tag,omitempty"`
+	RawTag    string            `json:",omitempty"`
+	Tag       map[string]string `json:",omitempty"`
 	Anonymous bool
 }
 
@@ -36,9 +36,9 @@ type DataType struct {
 	PkgPath        string
 	Kind           string
 	Size           uintptr
-	Fields         []*DataField
-	Elem           *DataType `json:"Elem,omitempty"`
-	Representation string
+	Fields         []*DataField `json:",omitempty"`
+	Elem           *DataType    `json:",omitempty"`
+	Representation string       `json:",omitempty"`
 }
 
 type DataTypes []*DataType
